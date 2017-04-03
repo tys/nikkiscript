@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>にっき</title>
+    <script>
+      "use strict";
+      //つかいかたは
+      //きじファイルとなる yyyyMMdd.htmlを おなじ フォルダに おく
+      //かいぎょうは <br>に おきかわる
+      //へんすう zkjに その ファイルめい の.htmlを とったのと きじのタイトルを かく
+      //おわり
+
+      //ぜんきじ（きじの ひづけ（ファイルめい）と きじの タイトルを かく）
+      var zkj={
+        "170402":"たこやき やけた",
+        "170401":"びわこの さかな",
+        "170330":"きんかくじを たてたひとは"
+      };
+      //HTTPで GET
+      function httpget(u,c){
+        var r=new XMLHttpRequest();
+        r.onreadystatechange=function(){
+          if(r.readyState==4&&r.status==200)c(r.responseText);
+        }
+        r.open("GET",u,true);
+        r.send(null);
+      }
+      //yyyyMMddを yy年MM月dd日に へんかんする たてがきしたいときは pをつかう
+      function formatymd(ymd,p){
+        var b="";
+        if(ymd.length>=2)b+=parseInt(ymd.substring(0,2))+p+"年"+p;
+        if(ymd.length>=4)b+=parseInt(ymd.substring(2,4))+p+"月"+p;
+        if(ymd.length>=6)b+=parseInt(ymd.substring(4,6))+p+"日"+p;
+        return b;
+      }
+      window.onload=function(){
+        //ねんがっぴを あらわす パラメータを しゅとくする
+        var ymd=location.search.substring(1);
+        if(ymd==""){
+          var n=new Date();
+          ymd=String(n.getFullYear()).substring(2);
+          ymd+=("0"+(n.getMonth()+1)).slice(-2);
+        }else if(!/^[0-9]+$/.test(ymd)){
+          return;
+        }
+        //つきべつひょうじへの リンクを つくる
+        var m=[],p="",k=Object.keys(zkj).sort().reverse();
+        for(var i in k){
+          var a=k[i].substring(0,4);
+          if(a!=p)m.push(p=a);
+        }
+        for(var i in m)document.getElementById("index").innerHTML+='<a href="?'+m[i]+'">'+formatymd(m[i],"")+'</a> ';
+        //URLパラメータに おうじて きじを しぼりこむ
+        var kj=[];
+        for(var i in zkj)if(i.startsWith(ymd))kj.push(i);
+        kj.sort().reverse();
+        //きじデータを とりに いって ひょうじする
+        for(var i in kj){
+          (function(i2){
+            document.getElementById("contents").innerHTML+='<tr><td valign="top" align="center">'+formatymd(i2,"<br>")+'</td><td valign="top" align="left" id="c'+i2+'"></td></tr>';
+            httpget(i2+".html",function(res){
+              var t='<b>'+zkj[i2]+'</b>';
+              if(ymd.length!=6)t='<a href="?'+i2+'">'+t+'</a>';
+              res=res.replace(/\r?\n/g,"<br>");
+              document.getElementById("c"+i2).innerHTML=t+'<br>'+res;
+            });
+          }(kj[i]));
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <center><b>にっき</b></center>
+    <div id="index" align="center"></div>
+    <table id="contents" border="1" cellpadding="10" width="640" align="center"></table>
+  </body>
+</html>
