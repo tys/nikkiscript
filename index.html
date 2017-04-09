@@ -5,13 +5,13 @@
     <title>にっき</title>
     <script>
       "use strict";
-      //つかいかたは
-      //きじファイルとなる yyyyMMdd.htmlを おなじ フォルダに おく
-      //かいぎょうは <br>に おきかわる
-      //へんすう zkjに その ファイルめい の.htmlを とったのと きじのタイトルを かく
+      //つかいかた
+      //きじファイルとなる　yyyyMMdd.htmlを　おなじ　フォルダに　おく
+      //かいぎょうは　<br>に　おきかわる
+      //へんすうの　zkjに　そのファイルめいの　.htmlを とった　ファイルめいと きじのタイトルを かく
       //おわり
 
-      //ぜんきじ（きじの ひづけ（ファイルめい）と きじの タイトルを かく）
+      //ぜんきじ（きじの　ひづけ（ファイルめい）と　きじの　タイトルを　かく）
       var zkj={
         "170402":"たこやき やけた",
         "170401":"びわこの さかな",
@@ -26,7 +26,7 @@
         r.open("GET",u,true);
         r.send(null);
       }
-      //yyyyMMddを yy年MM月dd日に へんかんする たてがきしたいときは pをつかう
+      //yyyyMMddを　yy年MM月dd日に　へんかんする　たてがきしたいときは　pをつかう
       function formatymd(ymd,p){
         var b="";
         if(ymd.length>=2)b+=parseInt(ymd.substring(0,2))+p+"年"+p;
@@ -35,7 +35,7 @@
         return b;
       }
       window.onload=function(){
-        //ねんがっぴを あらわす パラメータを しゅとくする
+        //ねんがっぴを　あらわす　パラメータを　しゅとくする
         var ymd=location.search.substring(1);
         if(ymd==""){
           var n=new Date();
@@ -44,18 +44,18 @@
         }else if(!/^[0-9]+$/.test(ymd)){
           return;
         }
-        //つきべつひょうじへの リンクを つくる
+        //つきべつひょうじへの　リンクを　つくる
         var m=[],p="",k=Object.keys(zkj).sort().reverse();
         for(var i in k){
           var a=k[i].substring(0,4);
           if(a!=p)m.push(p=a);
         }
         for(var i in m)document.getElementById("index").innerHTML+='<a href="?'+m[i]+'">'+formatymd(m[i],"")+'</a> ';
-        //URLパラメータに おうじて きじを しぼりこむ
+        //URLパラメータに　おうじて　きじを　しぼりこむ
         var kj=[];
         for(var i in zkj)if(i.startsWith(ymd))kj.push(i);
         kj.sort().reverse();
-        //きじデータを とりに いって ひょうじする
+        //きじデータを　とりに　いって　ひょうじする
         for(var i in kj){
           (function(i2){
             document.getElementById("contents").innerHTML+='<tr><td valign="top" align="center">'+formatymd(i2,"<br>")+'</td><td valign="top" align="left" id="c'+i2+'"></td></tr>';
